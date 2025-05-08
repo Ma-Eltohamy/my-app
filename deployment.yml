@@ -1,0 +1,24 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kaivy
+  namespace: prod
+  labels:
+    app: kaivy
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: kaivy
+  template:
+    metadata:
+      labels:
+        app: kaivy
+    spec:
+      containers:
+        - name: kaivy
+          imagePullPolicy: Always
+          image: maeltohamy/kaivy
+          ports:
+            - containerPort: 80
