@@ -2,23 +2,23 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: kaivy
+  name: nginx
   namespace: prod
   labels:
-    app: kaivy
+    app: nginx
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: kaivy
+      app: nginx
   template:
     metadata:
       labels:
-        app: kaivy
+        app: nginx
     spec:
       containers:
-        - name: kaivy
+        - name: nginx
           imagePullPolicy: Always
-          image: maeltohamy/kaivy
+          image: nginx
           ports:
             - containerPort: 80
