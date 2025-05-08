@@ -1,0 +1,32 @@
+
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: my-app-bar # A unique name for your Argo CD Application
+  namespace: argocd   # The namespace where Argo CD is installed (usually 'argocd')
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io # We use the finalizers to undeploy the project whenever we delete this application from the cluster
+spec:
+  project: default    # The Argo CD project this application belongs to (use 'default' unless you have others)
+  # So if you have many argocd projects write the sutable one
+  # you will make a big use of this feature if you're working in multiple teams and each team is working on a specific project using the same arog-cd
+
+  source:
+    repoURL: https://github.com/Ma-Eltohamy/my-app.git
+    targetRevision: HEAD                                   # Specify the branch, tag, or commit (e.g., 'main', 'v1.0.0', 'a1b2c3d4')
+    path: environments/staging/my-sec-app                          # The directory within the ------- repo ---------- containing your K8s YAMLs
+
+  destination:
+    server: https://kubernetes.default.svc                 # The Kubernetes API server URL. Use this for in-cluster deployments.
+    namespace: prod
+
+  syncPolicy:
+    automated:
+      prune: true      # Enables auto-pruning of resources no longer defined in Git
+      selfHeal: true   # Enables auto-correction of manual changes made to deployed resources
+      allowEmpty: false
+    syncOptions:
+      - Validate=true
+      - CreateNamespace=true # Automatically create the target namespace if it doesn't exist
+      - PrunePropagationPolicy=foreground
+      - PruneLast=true
